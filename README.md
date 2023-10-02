@@ -2,4 +2,4 @@
 
 I'm learning about dotfiles
 
-test
+test ssh
