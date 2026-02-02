@@ -1,0 +1,40 @@
+# ~/.profile: executed by the command interpreter for login shells.
+# This file is not read by bash(1), if ~/.bash_profile or ~/.bash_login
+# exists.
+# see /usr/share/doc/bash/examples/startup-files for examples.
+# the files are located in the bash-doc package.
+
+# the default umask is set in /etc/profile; for setting the umask
+# for ssh logins, install and configure the libpam-umask package.
+#umask 022
+
+# XDG Bash history (must be in environment before bash starts)
+export XDG_STATE_HOME="$HOME/.local/state"
+export HISTFILE="$XDG_STATE_HOME/bash/history"
+mkdir -p "$(dirname "$HISTFILE")"
+
+# === XDG Base Directory Specification ===
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_CACHE_HOME="$HOME/.cache"
+
+# === Bash XDG compliance ===
+export BASH_CONFIG_HOME="$XDG_CONFIG_HOME/bash"
+
+# === Dotnet XDG compliance ===
+export DOTNET_CLI_HOME="$XDG_DATA_HOME/dotnet"
+
+# Ensure directories exist
+mkdir -p "$XDG_CONFIG_HOME"
+mkdir -p "$XDG_DATA_HOME"
+mkdir -p "$XDG_STATE_HOME"
+mkdir -p "$XDG_CACHE_HOME"
+mkdir -p "$BASH_CONFIG_HOME"
+mkdir -p "$DOTNET_CLI_HOME"
+
+# === Nix profile ===
+export PATH="$XDG_STATE_HOME/nix/profile/bin:$PATH"
+
+# === User bins ===
+[ -d "$HOME/bin" ] && PATH="$HOME/bin:$PATH"
+[ -d "$HOME/.local/bin" ] && PATH="$HOME/.local/bin:$PATH"
