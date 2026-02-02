@@ -1,0 +1,19 @@
+# ~/.bashrc — XDG shim for Bash | MUST be first (history must be set before prompt init)
+export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
+export HISTFILE="$XDG_STATE_HOME/bash/history"
+mkdir -p "$(dirname "$HISTFILE")"
+
+# Ensure XDG vars exist even for non-login shells
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+
+# (re-export is intentional: ensures consistency even if overridden earlier)
+export XDG_STATE_HOME
+
+export BASH_CONFIG_HOME="$XDG_CONFIG_HOME/bash"
+
+# Load real Bash config
+if [ -f "$BASH_CONFIG_HOME/bashrc" ]; then
+    source "$BASH_CONFIG_HOME/bashrc"
+fi
