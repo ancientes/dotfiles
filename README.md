@@ -101,6 +101,7 @@ Editing an existing managed file
 ```sh
 chezmoi edit ~/.bashrc
 chezmoi apply
+git add .
 git commit -am "update bashrc"
 git push
 ```
@@ -119,6 +120,7 @@ chezmoi add ~/.config/fish/config.fish
 
 # apply + sync
 chezmoi apply
+git add .
 git commit -m "add fish config"
 git push
 ```
