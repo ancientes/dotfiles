@@ -43,11 +43,6 @@ end
 
 
 # === PATH SETUP ===
-{{- if eq .chezmoi.os "darwin" }}
-# Terminal type
-set -gx TERM xterm-256color
-{{- end }}
-
 # Disable the default greeting message
 set -g fish_greeting
 

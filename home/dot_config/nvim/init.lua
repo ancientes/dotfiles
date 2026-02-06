@@ -13,6 +13,12 @@ vim.opt.rtp:prepend(lazypath)
 
 local lazy_config = require "configs.lazy"
 
+-- Nix-friendly: disable LuaRocks/hererocks
+lazy_config.rocks = {
+  enabled = false,
+  hererocks = false,
+}
+
 -- load plugins
 require("lazy").setup({
   {
