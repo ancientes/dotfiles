@@ -48,6 +48,11 @@ if not set -q TMUX; and not set -q TERM
     set -gx TERM xterm-256color
 end
 
+{{- if and (eq .chezmoi.os "linux") (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+# WSL detected via kernel osrelease
+set -gx BROWSER "/mnt/c/Program Files (x86)/Microsoft/Edge/Application/msedge.exe"
+{{- end }}
+
 # Disable the default greeting message
 set -g fish_greeting
 
