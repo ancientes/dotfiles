@@ -1,0 +1,22 @@
+# Abbreviation list
+abbr gf "git-update"
+abbr gm "git-merge"
+abbr gs "git stash save --include-untracked"
+abbr gsa "git stash pop"
+abbr gc "git-branch"
+abbr gcc "git-branch-push"
+abbr gd "git checkout dev"
+abbr cf "code \$__fish_config_dir"
+{{- if eq .chezmoi.os "darwin" }}
+abbr op "open ." # Open the current directory through Finder
+abbr bc "brew cu -ay --cleanup --include-mas" # Add -f if you want to include latest (E.g. -facy)
+abbr bu "brew update && brew upgrade; pip install --upgrade pip; asdf plugin update --all &> /dev/null" # Handles both stdout and stderr
+abbr flushdns "sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder"
+{{- end }}
+{{- $osrel := lower (default "" (index .chezmoi.kernel "osrelease")) }}
+{{- if and (eq .chezmoi.os "linux") (contains $osrel "microsoft") }}
+abbr op "explorer.exe ." # Open the current directory through Explorer
+{{- end }}
+abbr unset "set --erase"
+abbr ats --set-cursor "atuin search --search-mode full-text %"
+abbr atd --set-cursor "atuin search --delete --search-mode full-text %"
