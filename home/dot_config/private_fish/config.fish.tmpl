@@ -48,8 +48,8 @@ if not set -q TMUX; and not set -q TERM
     set -gx TERM xterm-256color
 end
 
-{{- if and (eq .chezmoi.os "linux") (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
-# WSL detected via kernel osrelease
+{{- $osrel := lower (default "" (index .chezmoi.kernel "osrelease")) }}
+{{- if and (eq .chezmoi.os "linux") (contains $osrel "microsoft") }}
 set -gx BROWSER "/mnt/c/Program Files (x86)/Microsoft/Edge/Application/msedge.exe"
 {{- end }}
 
@@ -61,7 +61,7 @@ set fish_color_command blue
 set fish_color_autosuggestion yellow
 
 # Bind -e \e\[A
-bind \e\[A up-or-search
+#bind \e\[A up-or-search
 
 # Preferred editor
 set -gx EDITOR nvim
@@ -97,20 +97,14 @@ set --erase _asdf_shims
 if not status is-interactive
     exit
 else
-    {{- if eq .chezmoi.os "linux" }}
-    # Fix COLORTERM (Black Background in K9S) inside tmux sessions
-    if set -q TMUX
-        set -e COLORTERM
-    end
-    {{- end }}
     {{- if eq .chezmoi.os "darwin" }}
-    atuin init --disable-up-arrow fish | source
     eval (brew shellenv)
     {{- end }}
+    atuin init --disable-up-arrow fish | source
     starship init fish | source
-    kubectl completion fish | source
     zoxide init fish | source
     direnv hook fish | source
+    kubectl completion fish | source
 end
 
 # Load aliases
