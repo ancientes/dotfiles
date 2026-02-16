@@ -66,9 +66,11 @@ set fish_color_autosuggestion yellow
 # Preferred editor
 set -gx EDITOR nvim
 
+{{- if eq .chezmoi.os "linux" }}
 # C/C++ compilers
 set -gx CC gcc-13
 set -gx CXX g++-13
+{{- end }}
 
 # Default theme is 'Monokai Extended' | bat/src/assets.rs
 set -x MANROFFOPT -c
