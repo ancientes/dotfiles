@@ -1,8 +1,8 @@
 # === EARLY SETUP (before ANY tools) ===
 # Workaround error: ValueError: Unknown locale: UTF-8
-set -gx LANG "en_US.UTF-8"
-set -gx LC_ALL "en_US.UTF-8"
-set -gx LC_CTYPE "en_US.UTF-8"
+set -gx LANG en_US.utf8
+set -gx LC_ALL en_US.utf8
+set -gx LC_CTYPE en_US.utf8
 
 # XDG Base Directory Specification
 set -gx XDG_CONFIG_HOME "$HOME/.config"
@@ -43,6 +43,11 @@ end
 
 
 # === PATH SETUP ===
+# Add ~/.local/bin to PATH if it exists
+if type -q nix
+    set -gx LOCALE_ARCHIVE (nix eval --raw nixpkgs#glibcLocales)/lib/locale/locale-archive
+end
+
 # Terminal type
 if not set -q TMUX; and not set -q TERM
     set -gx TERM xterm-256color
@@ -100,13 +105,33 @@ if not status is-interactive
     exit
 else
     {{- if eq .chezmoi.os "darwin" }}
-    eval (brew shellenv)
+    if type -q brew
+        eval (brew shellenv)
+    end
     {{- end }}
-    atuin init --disable-up-arrow fish | source
-    starship init fish | source
-    zoxide init fish | source
-    direnv hook fish | source
-    kubectl completion fish | source
+    if not set -q TMUX
+        if type -q tmux
+            exec tmux new-session -A -s main
+        end
+    end
+    if type -q atuin
+        atuin init --disable-up-arrow fish | source
+    end
+    if type -q starship
+        starship init fish | source
+    end
+    if type -q zoxide
+        zoxide init fish | source
+    end
+    if type -q direnv
+        direnv hook fish | source
+    end
+    if type -q kubectl
+        kubectl completion fish | source
+    end
+    if type -q mise
+        mise activate fish | source
+    end
 end
 
 # Load aliases
