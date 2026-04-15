@@ -38,3 +38,4 @@ export PATH="$XDG_STATE_HOME/nix/profile/bin:$PATH"
 # === User bins ===
 [ -d "$HOME/bin" ] && PATH="$HOME/bin:$PATH"
 [ -d "$HOME/.local/bin" ] && PATH="$HOME/.local/bin:$PATH"
+[ -f "$HOME/.bashrc" ] && source "$HOME/.bashrc"
