@@ -6,19 +6,22 @@ set -gx LC_CTYPE en_US.utf8
 
 # XDG Base Directory Specification
 set -gx XDG_CONFIG_HOME "$HOME/.config"
-set -gx XDG_DATA_HOME   "$HOME/.local/share"
-set -gx XDG_STATE_HOME  "$HOME/.local/state"
-set -gx XDG_CACHE_HOME  "$HOME/.cache"
+set -gx XDG_DATA_HOME "$HOME/.local/share"
+set -gx XDG_STATE_HOME "$HOME/.local/state"
+set -gx XDG_CACHE_HOME "$HOME/.cache"
 
 # XDG Directories for specific tools
-set -gx STARSHIP_CONFIG             "$XDG_CONFIG_HOME/starship/starship.toml"
+set -gx STARSHIP_CONFIG "$XDG_CONFIG_HOME/starship/starship.toml"
 set -gx AWS_SHARED_CREDENTIALS_FILE "$XDG_CONFIG_HOME/aws/credentials"
-set -gx AWS_CONFIG_FILE             "$XDG_CONFIG_HOME/aws/config"
-set -gx DOTNET_CLI_HOME             "$XDG_DATA_HOME/dotnet"
-set -gx KUBECONFIG                  "$XDG_CONFIG_HOME/kube/config"
-set -gx KUBECACHEDIR                "$XDG_CACHE_HOME/kube"
-set -gx ASDF_DATA_DIR               "$XDG_DATA_HOME/asdf"
-set -gx ASDF_CONFIG_FILE            "$XDG_CONFIG_HOME/asdf/asdf.conf"
+set -gx AWS_CONFIG_FILE "$XDG_CONFIG_HOME/aws/config"
+{{- $osrel := lower (default "" (index .chezmoi.kernel "osrelease")) }}
+{{- if and (eq .chezmoi.os "linux") (contains $osrel "microsoft") }}
+set -gx DOTNET_CLI_HOME "$XDG_DATA_HOME/dotnet"
+{{- end }}
+set -gx KUBECONFIG "$XDG_CONFIG_HOME/kube/config"
+set -gx KUBECACHEDIR "$XDG_CACHE_HOME/kube"
+set -gx ASDF_DATA_DIR "$XDG_DATA_HOME/asdf"
+set -gx ASDF_CONFIG_FILE "$XDG_CONFIG_HOME/asdf/asdf.conf"
 
 # Ensure directories exist
 mkdir -p "$XDG_DATA_HOME"
@@ -28,7 +31,10 @@ mkdir -p "$XDG_CACHE_HOME"
 mkdir -p "$(dirname "$STARSHIP_CONFIG")"
 mkdir -p "$(dirname "$AWS_SHARED_CREDENTIALS_FILE")"
 mkdir -p "$(dirname "$AWS_CONFIG_FILE")"
+{{- $osrel := lower (default "" (index .chezmoi.kernel "osrelease")) }}
+{{- if and (eq .chezmoi.os "linux") (contains $osrel "microsoft") }}
 mkdir -p "$DOTNET_CLI_HOME"
+{{- end }}
 mkdir -p "$ASDF_DATA_DIR"
 mkdir -p "$(dirname "$ASDF_CONFIG_FILE")"
 mkdir -p "$(dirname "$KUBECONFIG")"
@@ -41,11 +47,10 @@ for f in /nix/var/nix/profiles/default/etc/profile.d/*.fish
     end
 end
 
-
 # === PATH SETUP ===
 # Add ~/.local/bin to PATH if it exists
 if type -q nix
-    set -gx LOCALE_ARCHIVE (nix eval --raw nixpkgs#glibcLocales)/lib/locale/locale-archive
+    set -gx LOCALE_ARCHIVE $XDG_STATE_HOME/nix/profile/lib/locale/locale-archive
 end
 
 # Terminal type
@@ -84,21 +89,6 @@ set -x MANPAGER "sh -c 'col -bx | bat -l man -p --paging=always --theme 'gruvbox
 
 # Let aria2 download python packages through aria2c instead of curl or wget
 set -gx PYTHON_BUILD_ARIA2_OPTS "-x 10 -k 1M"
-
-# ASDF configuration code
-if test -z $ASDF_DATA_DIR
-    set _asdf_shims "$HOME/.asdf/shims"
-else
-    set _asdf_shims "$ASDF_DATA_DIR/shims"
-end
-
-# Do not use fish_add_path (added in Fish 3.2) because it
-# potentially changes the order of items in PATH
-if not contains $_asdf_shims $PATH
-    set -gx --prepend PATH $_asdf_shims
-end
-set --erase _asdf_shims
-
 
 # === TOOL INITIALIZATIONS ===
 if not status is-interactive
