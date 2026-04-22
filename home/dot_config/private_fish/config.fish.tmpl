@@ -1,8 +1,8 @@
 # === EARLY SETUP (before ANY tools) ===
 # Workaround error: ValueError: Unknown locale: UTF-8
-set -gx LANG en_US.utf8
-set -gx LC_ALL en_US.utf8
-set -gx LC_CTYPE en_US.utf8
+set -gx LANG "en_US.UTF-8"
+set -gx LC_ALL "en_US.UTF-8"
+set -gx LC_CTYPE "en_US.UTF-8"
 
 # XDG Base Directory Specification
 set -gx XDG_CONFIG_HOME "$HOME/.config"
@@ -20,8 +20,6 @@ set -gx DOTNET_CLI_HOME "$XDG_DATA_HOME/dotnet"
 {{- end }}
 set -gx KUBECONFIG "$XDG_CONFIG_HOME/kube/config"
 set -gx KUBECACHEDIR "$XDG_CACHE_HOME/kube"
-set -gx ASDF_DATA_DIR "$XDG_DATA_HOME/asdf"
-set -gx ASDF_CONFIG_FILE "$XDG_CONFIG_HOME/asdf/asdf.conf"
 
 # Ensure directories exist
 mkdir -p "$XDG_DATA_HOME"
@@ -35,8 +33,6 @@ mkdir -p "$(dirname "$AWS_CONFIG_FILE")"
 {{- if and (eq .chezmoi.os "linux") (contains $osrel "microsoft") }}
 mkdir -p "$DOTNET_CLI_HOME"
 {{- end }}
-mkdir -p "$ASDF_DATA_DIR"
-mkdir -p "$(dirname "$ASDF_CONFIG_FILE")"
 mkdir -p "$(dirname "$KUBECONFIG")"
 mkdir -p "$KUBECACHEDIR"
 
