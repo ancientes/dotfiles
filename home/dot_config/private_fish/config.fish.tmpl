@@ -21,6 +21,9 @@ set -gx DOTNET_CLI_HOME "$XDG_DATA_HOME/dotnet"
 set -gx KUBECONFIG "$XDG_CONFIG_HOME/kube/config"
 set -gx KUBECACHEDIR "$XDG_CACHE_HOME/kube"
 
+# Disable mouse reporting in the terminal to avoid issues with certain applications
+printf '\e[?1000l\e[?1002l\e[?1003l\e[?1006l' 2>/dev/null
+
 # Ensure directories exist
 mkdir -p "$XDG_DATA_HOME"
 mkdir -p "$XDG_CONFIG_HOME"
